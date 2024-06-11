@@ -1,8 +1,11 @@
 {
-  "name": "node-intermediate",
+  "name": "node-advanced",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:modolee/node-intermediate.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/modolee/node-intermediate.git"
+  },
   "author": "modolee <modolee.si@gmail.com>",
   "license": "MIT",
   "type": "module",
@@ -25,5 +28,13 @@
     "eslint": "9.x",
     "globals": "^15.2.0",
     "prisma": "^5.14.0"
+  },
+  "description": "- `.env.example` 파일의 이름을 `.env`로 변경하고 아래 내용을 채움",
+  "bugs": {
+    "url": "https://github.com/modolee/node-intermediate/issues"
+  },
+  "homepage": "https://github.com/modolee/node-intermediate#readme",
+  "directories": {
+    "test": "tests"
   }
 }
