@@ -5,7 +5,7 @@ import { ResumeRepository } from '../repositories/resumes.repository.js';
 
 
 export class ResumeService {
-    ResumeRepository = new ResumeRepository();
+    resumeRepository = new ResumeRepository();
 
     getAllResume = async (authorId, sort) => {
         const allResume = await this.ResumeRepository.getAllResume(authorId, sort);
@@ -36,84 +36,29 @@ export class ResumeService {
             updatedAt: resumeData.updatedAt,
         };
     };
-}
-// 이력서 생성
-export const createResume = async(req, res, next) => {
-    try {
-        const user = req.user;
-        const { title, content } = req.body;
-        const authorId = user.id;
-    
-        const data = await prisma.resume.create({
-            data: {
-                authorId,
-                title,
-                content,
-            },
-        });
-    
-        return res.status(HTTP_STATUS.CREATED).json({
-            status: HTTP_STATUS.CREATED,
-            message: MESSAGES.RESUMES.CREATE.SUCCEED,
-            data,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
 
-// 이력서 목록 조회
-export const resumeList = async(req, res, next) => {
-    try {
-        const user = req.user;
-        const authorId = user.id;
-    
-        let { sort } = req.query;
-    
-        sort = sort?.toLowerCase();
-    
-        if (sort !== 'desc' && sort !== 'asc') {
-            sort = 'desc';
-        }
-    
-        let data = await prisma.resume.findMany({
-            where: { authorId },
-            orderBy: {
-                createdAt: sort,
-            },
-            include: {
-                author: true,
-            },
-        });
-    
-        data = data.map((resume) => {
-            return {
-                id: resume.id,
-                authorName: resume.author.name,
-                title: resume.title,
-                content: resume.content,
-                status: resume.status,
-                createdAt: resume.createdAt,
-                updatedAt: resume.updatedAt,
-            };
-        });
-    
-        return res.status(HTTP_STATUS.OK).json({
-            status: HTTP_STATUS.OK,
-            message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
-            data,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+    findResumeById = async (authorId, id) => {
+
+        const resume = await this.resumeRepository.findResumeById(authorId,id);
+
+        return {
+            id: resume.id,
+            authorId: resume.authorId,
+            authorName: resume.author.name,
+            title: resume.title,
+            content: resume.content,
+            status: resume.status,
+            createdAt: resume.createdAt,
+            updatedAt: resume.updatedAt,
+        };
+    };
+}
 
 // 이력서 상세 조회
 export const resumeDetail = async(req, res, next) => {
     try {
         const user = req.user;
         const authorId = user.id;
-    
         const { id } = req.params;
     
         let data = await prisma.resume.findUnique({

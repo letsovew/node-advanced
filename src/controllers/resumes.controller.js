@@ -10,7 +10,7 @@ import { ResumeService } from '../services/resumes.service.js';
 
 export class ResumeController {
 
-    ResumeService = new ResumeService();
+    resumeService = new ResumeService();
 
     //이력서 조회
     getResumes = async(req, res, next) => {
@@ -23,12 +23,38 @@ export class ResumeController {
             if (sort !== 'desc' && sort !== 'asc') sort = 'desc';
             
             req.getData = { authorId, sort };
-            const resumes = await this.ResumeService.getAllResume(authorId, sort);
+            const resumes = await this.resumeService.getAllResume(authorId, sort);
 
             res.status(HTTP_STATUS.OK).json({ data: resumes });
             next();
         }catch(err){
             next(err);
+        }
+    };
+    
+    // 이력서 상세 조회
+    getResumeDetailById = async (req, res, next) => {
+        try {
+            const user = req.user;
+            const authorId = user.id;
+            const { id } = req.params;
+
+            const resume = await this.resumeService.findResumeById(authorId, id);
+
+            if (!resume) {
+                return res.status(HTTP_STATUS.NOT_FOUND).json({
+                    status: HTTP_STATUS.NOT_FOUND,
+                    message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
+                });
+            }
+        
+            return res.status(HTTP_STATUS.OK).json({
+                status: HTTP_STATUS.OK,
+                message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
+                data: resume,
+            });
+        } catch (error) {
+            next(error);
         }
     };
         
@@ -46,46 +72,6 @@ export class ResumeController {
             next(err);
         }
     };
-};
-
-// 이력서 상세 조회
-export const resumeDetail = async(req, res, next) => {
-    try {
-        const user = req.user;
-        const authorId = user.id;
-    
-        const { id } = req.params;
-    
-        let data = await prisma.resume.findUnique({
-            where: { id: +id, authorId },
-            include: { author: true },
-        });
-    
-        if (!data) {
-            return res.status(HTTP_STATUS.NOT_FOUND).json({
-                status: HTTP_STATUS.NOT_FOUND,
-                message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
-            });
-        }
-    
-        data = {
-            id: data.id,
-            authorName: data.author.name,
-            title: data.title,
-            content: data.content,
-            status: data.status,
-            createdAt: data.createdAt,
-            updatedAt: data.updatedAt,
-        };
-    
-        return res.status(HTTP_STATUS.OK).json({
-            status: HTTP_STATUS.OK,
-            message: MESSAGES.RESUMES.READ_DETAIL.SUCCEED,
-            data,
-        });
-    } catch (error) {
-        next(error);
-    }
 };
 
 // 이력서 수정

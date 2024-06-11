@@ -27,4 +27,13 @@ export class ResumeRepository {
         });
         return createResume;
     };
+
+    findResumeById = async (authorId, id) => {
+        let data = await prisma.resume.findUnique({
+            where: { id: +id, authorId },
+            include: { author: true },
+        });
+
+        return data;
+    };
 };
