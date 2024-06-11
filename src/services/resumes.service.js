@@ -52,6 +52,12 @@ export class ResumeService {
             updatedAt: resume.updatedAt,
         };
     };
+
+    updateResume = async (authorId, id, title, content) => {
+
+        const resume = await this.resumeRepository.updateResume(authorId, id, title, content);
+        if(!resume) return false;
+    };
 }
 
 // 이력서 상세 조회

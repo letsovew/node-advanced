@@ -36,4 +36,20 @@ export class ResumeRepository {
 
         return data;
     };
+
+    updateResume = async (authorId, id, title, content) => {
+        let existedResume = await prisma.resume.findUnique({
+            where: { id: +id, authorId },
+        });
+        if(!existedResume) return false;
+
+        const updateData = await prisma.resume.update({
+            where: { id: +id, authorId },
+            data: {
+                ...(title && { title }),
+                ...(content && { content }),
+            },
+        });
+        return updateData;
+    };
 };

@@ -65,51 +65,35 @@ export class ResumeController {
             const { title, content } = req.body;
             const { authorId } = user.id;
 
-            const createResumeData = await this.ResumeService.createResume(authorId, title, content);
+            const createResumeData = await this.resumeService.createResume(authorId, title, content);
 
             res.status(HTTP_STATUS.OK).json({ data: createResumeData });
         }catch(err){
             next(err);
         }
     };
-};
 
-// 이력서 수정
-export const updateResume = async(req, res, next) => {
-    try {
+    //이력서 수정
+    updateResume = async(req, res, next) => {
         const user = req.user;
         const authorId = user.id;
-    
         const { id } = req.params;
-    
         const { title, content } = req.body;
-    
-        let existedResume = await prisma.resume.findUnique({
-            where: { id: +id, authorId },
-        });
-    
-        if (!existedResume) {
+
+        const resume = await this.resumeService.updateResume(authorId, id, title, content);
+
+        if (!resume) {
             return res.status(HTTP_STATUS.NOT_FOUND).json({
                 status: HTTP_STATUS.NOT_FOUND,
                 message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
             });
         }
-    
-        const data = await prisma.resume.update({
-            where: { id: +id, authorId },
-            data: {
-                ...(title && { title }),
-                ...(content && { content }),
-            },
-        });
-    
+
         return res.status(HTTP_STATUS.OK).json({
             status: HTTP_STATUS.OK,
             message: MESSAGES.RESUMES.UPDATE.SUCCEED,
-            data,
+            data: resume,
         });
-    } catch (error) {
-        next(error);
     }
 };
 
