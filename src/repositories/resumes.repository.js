@@ -52,4 +52,15 @@ export class ResumeRepository {
         });
         return updateData;
     };
+
+    deleteResume = async (authorId, id) => {
+        let existedResume = await prisma.resume.findUnique({
+            where: { id: +id, authorId },
+        });
+        if(!existedResume) return false;
+
+        const resume = await prisma.resume.delete({ where: { id: +id, authorId } });
+
+        return resume;
+    };
 };

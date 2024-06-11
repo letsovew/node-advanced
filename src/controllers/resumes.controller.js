@@ -1,11 +1,5 @@
-import prisma from '../utils/prisma.util.js';
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
-import bcrypt from 'bcrypt';
-import { HASH_SALT_ROUNDS } from '../constants/auth.constant.js';
-import jwt from 'jsonwebtoken';
-import Joi from 'joi';
-import { MIN_RESUME_LENGTH } from '../constants/resume.constant.js';
 import { ResumeService } from '../services/resumes.service.js';
 
 export class ResumeController {
@@ -94,36 +88,26 @@ export class ResumeController {
             message: MESSAGES.RESUMES.UPDATE.SUCCEED,
             data: resume,
         });
-    }
-};
+    };
 
-// 이력서 삭제
-export const deleteResume = async(req, res, next) => {
-    try {
+    //이력서 삭제
+    deleteResume = async (req, res, next) => {
         const user = req.user;
         const authorId = user.id;
-    
         const { id } = req.params;
-    
-        let existedResume = await prisma.resume.findUnique({
-            where: { id: +id, authorId },
-        });
-    
-        if (!existedResume) {
+
+        const resume = await this.resumeService.deleteResume(authorId, id);
+        if(!resume){
             return res.status(HTTP_STATUS.NOT_FOUND).json({
                 status: HTTP_STATUS.NOT_FOUND,
                 message: MESSAGES.RESUMES.COMMON.NOT_FOUND,
             });
-        }
-    
-        const data = await prisma.resume.delete({ where: { id: +id, authorId } });
-    
+        };
+
         return res.status(HTTP_STATUS.OK).json({
             status: HTTP_STATUS.OK,
             message: MESSAGES.RESUMES.DELETE.SUCCEED,
-            data: { id: data.id },
+            data: { id: resume.id },
         });
-    } catch (error) {
-        next(error);
-    }
+    };
 };
