@@ -4,76 +4,48 @@ import { MESSAGES } from '../constants/message.constant.js';
 import bcrypt from 'bcrypt';
 import { HASH_SALT_ROUNDS } from '../constants/auth.constant.js';
 import jwt from 'jsonwebtoken';
+import Joi from 'joi';
+import { MIN_RESUME_LENGTH } from '../constants/resume.constant.js';
+import { ResumeService } from '../services/resumes.service.js';
 
-// 이력서 생성
-export const createResume = async(req, res, next) => {
-    try {
-        const user = req.user;
-        const { title, content } = req.body;
-        const authorId = user.id;
-    
-        const data = await prisma.resume.create({
-            data: {
-                authorId,
-                title,
-                content,
-            },
-        });
-    
-        return res.status(HTTP_STATUS.CREATED).json({
-            status: HTTP_STATUS.CREATED,
-            message: MESSAGES.RESUMES.CREATE.SUCCEED,
-            data,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+export class ResumeController {
 
-// 이력서 목록 조회
-export const resumeList = async(req, res, next) => {
-    try {
+    ResumeService = new ResumeService();
+
+    //이력서 조회
+    getResumes = async(req, res, next) => {
         const user = req.user;
         const authorId = user.id;
-    
         let { sort } = req.query;
-    
-        sort = sort?.toLowerCase();
-    
-        if (sort !== 'desc' && sort !== 'asc') {
-            sort = 'desc';
+
+        try {
+            sort = sort?.toLowerCase();
+            if (sort !== 'desc' && sort !== 'asc') sort = 'desc';
+            
+            req.getData = { authorId, sort };
+            const resumes = await this.ResumeService.getAllResume(authorId, sort);
+
+            res.status(HTTP_STATUS.OK).json({ data: resumes });
+            next();
+        }catch(err){
+            next(err);
         }
-    
-        let data = await prisma.resume.findMany({
-            where: { authorId },
-            orderBy: {
-                createdAt: sort,
-            },
-            include: {
-                author: true,
-            },
-        });
-    
-        data = data.map((resume) => {
-            return {
-                id: resume.id,
-                authorName: resume.author.name,
-                title: resume.title,
-                content: resume.content,
-                status: resume.status,
-                createdAt: resume.createdAt,
-                updatedAt: resume.updatedAt,
-            };
-        });
-    
-        return res.status(HTTP_STATUS.OK).json({
-            status: HTTP_STATUS.OK,
-            message: MESSAGES.RESUMES.READ_LIST.SUCCEED,
-            data,
-        });
-    } catch (error) {
-        next(error);
-    }
+    };
+        
+    //이력서 생성
+    createResume = async(req, res, next) => {
+        try{
+            const { user } = req.user;
+            const { title, content } = req.body;
+            const { authorId } = user.id;
+
+            const createResumeData = await this.ResumeService.createResume(authorId, title, content);
+
+            res.status(HTTP_STATUS.OK).json({ data: createResumeData });
+        }catch(err){
+            next(err);
+        }
+    };
 };
 
 // 이력서 상세 조회

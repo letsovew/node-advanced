@@ -1,4 +1,7 @@
 import express from 'express';
+import helmet from 'helmet';
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 import { SERVER_PORT } from './constants/env.constant.js';
 import { errorHandler } from './middlewares/error-handler.middleware.js';
 import { HTTP_STATUS } from './constants/http-status.constant.js';
@@ -6,8 +9,14 @@ import { apiRouter } from './routers/index.js';
 
 const app = express();
 
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 app.get('/health-check', (req, res) => {
   return res.status(HTTP_STATUS.OK).send(`I'm healthy.`);

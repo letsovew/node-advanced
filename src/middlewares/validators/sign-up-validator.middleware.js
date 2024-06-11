@@ -13,7 +13,7 @@ const schema = Joi.object({
   }),
   passwordConfirm: Joi.string().required().valid(Joi.ref('password')).messages({
     'any.required': MESSAGES.AUTH.COMMON.PASSWORD_CONFIRM.REQUIRED,
-    'any.only': MESSAGES.AUTH.COMMON.PASSWORD_CONFIRM.NOT_MACHTED_WITH_PASSWORD,
+    'any.only': MESSAGES.AUTH.COMMON.PASSWORD_CONFIRM.NOT_MATCHED_WITH_PASSWORD,
   }),
   name: Joi.string().required().messages({
     'any.required': MESSAGES.AUTH.COMMON.NAME.REQUIRED,
