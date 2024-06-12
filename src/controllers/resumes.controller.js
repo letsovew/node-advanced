@@ -58,6 +58,9 @@ export class ResumeController {
             const { title, content } = req.body;
             const { authorId } = user.id;
 
+            if (!nickname || !password || !title || !content)
+                throw new Error('InvalidParamsError');
+
             const createResumeData = await this.resumeService.createResume(authorId, title, content);
 
             res.status(HTTP_STATUS.OK).json({ data: createResumeData });

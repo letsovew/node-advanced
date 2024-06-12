@@ -2,11 +2,11 @@ import { jest } from '@jest/globals';
 import { ResumeService } from '../../../src/services/resumes.service';
 
 let mockResumeRepository = {
-    findMany: jest.fn(),
-    findUnique: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+    getAllResume: jest.fn(),
+    createResume: jest.fn(),
+    findResumeById: jest.fn(),
+    updateResume: jest.fn(),
+    deleteResume: jest.fn(),
 };
 
 let resumeService = new ResumeService(mockResumeRepository);
