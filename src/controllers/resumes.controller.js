@@ -34,7 +34,6 @@ export class ResumeController {
             const { id } = req.params;
 
             const resume = await this.resumeService.findResumeById(authorId, id);
-
             if (!resume) {
                 return res.status(HTTP_STATUS.NOT_FOUND).json({
                     status: HTTP_STATUS.NOT_FOUND,

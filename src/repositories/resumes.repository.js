@@ -1,10 +1,12 @@
 import prisma from '../utils/prisma.util.js';
 
 export class ResumeRepository {
-
+    constructor(prisma){
+        this.prisma = prisma;
+    }
     getAllResume = async (authorId, sort) => {
     
-        let data = await prisma.resume.findMany({
+        let data = await this.prisma.resume.findMany({
             where: { authorId },
             orderBy: {
                 createdAt: sort,
@@ -18,7 +20,7 @@ export class ResumeRepository {
     };
 
     createResume = async (authorId, title, content) => {
-        const createResume = await prisma.resumes.create({
+        const createResume = await this.prisma.resumes.create({
             data: {
                 authorId,
                 title,
@@ -29,7 +31,7 @@ export class ResumeRepository {
     };
 
     findResumeById = async (authorId, id) => {
-        let data = await prisma.resume.findUnique({
+        let data = await this.prisma.resume.findUnique({
             where: { id: +id, authorId },
             include: { author: true },
         });
@@ -38,12 +40,12 @@ export class ResumeRepository {
     };
 
     updateResume = async (authorId, id, title, content) => {
-        let existedResume = await prisma.resume.findUnique({
+        let existedResume = await this.prisma.resume.findUnique({
             where: { id: +id, authorId },
         });
         if(!existedResume) return false;
 
-        const updateData = await prisma.resume.update({
+        const updateData = await this.prisma.resume.update({
             where: { id: +id, authorId },
             data: {
                 ...(title && { title }),
@@ -54,7 +56,7 @@ export class ResumeRepository {
     };
 
     deleteResume = async (authorId, id) => {
-        let existedResume = await prisma.resume.findUnique({
+        let existedResume = await this.prisma.resume.findUnique({
             where: { id: +id, authorId },
         });
         if(!existedResume) return false;

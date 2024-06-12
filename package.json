@@ -1,5 +1,5 @@
 {
-  "name": "node-advanced",
+  "name": "advanced",
   "version": "1.0.0",
   "main": "app.js",
   "author": "modolee <modolee.si@gmail.com>",
@@ -7,6 +7,10 @@
   "type": "module",
   "scripts": {
     "start": "node src/app.js",
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --forceExit",
+    "test:silent": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --silent --forceExit",
+    "test:coverage": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --forceExit",
+    "test:unit": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest __tests__/unit --forceExit",
     "dev": "cross-env NODE_ENV=dev nodemon --exec babel-node app.js --delay 2 --ignore 'static'"
   },
   "dependencies": {
@@ -32,12 +36,13 @@
     "jest": "^29.7.0",
     "prisma": "^5.15.0"
   },
-  "description": "",
+  "description": "- `.env.example` ?åå?ùº?ùò ?ù¥Î¶ÑÏùÑ `.env`Î°? Î≥?Í≤ΩÌïòÍ≥? ?ïÑ?ûò ?Ç¥?ö©?ùÑ Ï±ÑÏ??",
   "bugs": {
     "url": "https://github.com/modolee/node-intermediate/issues"
   },
   "homepage": "https://github.com/modolee/node-intermediate#readme",
   "directories": {
     "test": "tests"
-  }
+  },
+  "keywords": []
 }
