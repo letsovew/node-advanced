@@ -1,5 +1,3 @@
-import prisma from '../utils/prisma.util.js';
-
 export class ResumeRepository {
     constructor(prisma){
         this.prisma = prisma;
@@ -61,7 +59,7 @@ export class ResumeRepository {
         });
         if(!existedResume) return false;
 
-        const resume = await prisma.resume.delete({ where: { id: +id, authorId } });
+        const resume = await this.prisma.resume.delete({ where: { id: +id, authorId } });
 
         return resume;
     };

@@ -3,9 +3,9 @@ import { MESSAGES } from '../constants/message.constant.js';
 import { ResumeService } from '../services/resumes.service.js';
 
 export class ResumeController {
-
-    resumeService = new ResumeService();
-
+    constructor(resumeService){
+        this.resumeService = resumeService
+    }
     //이력서 조회
     getResumes = async(req, res, next) => {
         const user = req.user;
