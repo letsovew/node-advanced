@@ -22,11 +22,21 @@ describe('Resume Repository Unit Test', () => {
         const mockReturn = 'findMany String';
         mockPrisma.resumes.findMany.mockReturnValue(mockReturn);
 
-        const resumes = await resumeRepository.getAllResume();
+        const getAllResumeParams = {
+            authorId: 'getAllResumeAuthorId',
+            sort: 'getAllResumeSort',
+        };
 
+        const getAllResumeData = await resumeRepository.getAllResume(
+            getAllResumeParams.authorId,
+            getAllResumeParams.sort,
+        );
+
+        expect(getAllResumeData).toBe(mockReturn);
         expect(resumeRepository.prisma.resumes.findMany).toHaveBeenCalledTimes(1);
-
-        expect(resumes).toBe(mockReturn);
+        expect(resumeRepository.prisma.resumes.findMany).toHaveBeenCalledWith({
+            data: getAllResumeParams,
+        });
     });
 
     test('createResume Method', async () => {
@@ -46,23 +56,74 @@ describe('Resume Repository Unit Test', () => {
         );
 
         expect(createResumeData).toBe(mockReturn);
-
         expect(mockPrisma.resumes.create).toHaveBeenCalledTimes(1);
-
         expect(mockPrisma.resumes.create).toHaveBeenCalledWith({
-            data: createResumeData,
+            data: createResumeParams,
         });
     });
 
-    // test('findResumeById Method', async () => {
+    test('findResumeById Method', async () => {
+        const mockReturn = 'findUnique Return String';
+        mockPrisma.resumes.findUnique.mockReturnValue(mockReturn);
 
-    // });
+        const findResumeByIdParams = {
+            id: 'findResumeByIdResumeId',
+            authorId: 'findResumeByIdAuthorId',
+        };
 
-    // test('updateResume Method', async () => {
+        const findResumeByIdData = await resumeRepository.findResumeById(
+            findResumeByIdParams.id,
+            findResumeByIdParams.authorId,
+        );
 
-    // });
+        expect(findResumeByIdData).toBe(mockReturn);
+        expect(mockPrisma.resumes.findUnique).toHaveBeenCalledTimes(1);
+        expect(mockPrisma.resumes.findUnique).toHaveBeenCalledWith({
+            data: findResumeByIdParams,
+        });
+    });
 
-    // test('deleteResume Method', async () => {
+    test('updateResume Method', async () => {
+        const mockReturn = 'update Return String';
+        mockPrisma.resumes.update.mockReturnValue(mockReturn);
 
-    // });
+        const updateResumeParams = {
+            authorId: 'updateResumeAuthorId',
+            id: 'updateResumeId',
+            title: 'updateResumeTitle',
+            content: 'updateResumeContent',
+        };
+
+        const updateResumeData = await resumeRepository.updateResume(
+            updateResumeParams.title,
+            updateResumeParams.content,
+        );
+
+        expect(updateResumeData).toBe(mockReturn);
+        expect(mockPrisma.resumes.update).toHaveBeenCalledTimes(1);
+        expect(mockPrisma.resumes.update).toHaveBeenCalledWith({
+            data: updateResumeParams,
+        });
+    });
+
+    test('deleteResume Method', async () => {
+        const mockReturn = 'delete Return String';
+        mockPrisma.resumes.delete.mockReturnValue(mockReturn);
+
+        const deleteResumeParams = {
+            id: 'deleteResumeId',
+            authorId: 'deleteResumeAuthorId',
+        };
+
+        const deleteResumeData = await resumeRepository.deleteResume(
+            deleteResumeParams.id,
+            deleteResumeParams.authorId,
+        );
+
+        expect(deleteResumeData).toBe(mockReturn);
+        expect(mockPrisma.resumes.delete).toHaveBeenCalledTimes(1);
+        expect(mockPrisma.resumes.delete).toHaveBeenCalledWith({
+            data: deleteResumeParams,
+        });
+    });
 });
