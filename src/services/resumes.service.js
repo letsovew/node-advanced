@@ -24,7 +24,7 @@ export class ResumeService {
 
     createResume = async(authorId, title, content) => {
         const resumeData = await this.ResumeRepository.createResume(authorId, title, content);
-
+        if(!resumeData) return '이력서 생성에 실패했습니다.';
         return {
             id: +resumeData.id,
             authorId: +resumeData.authorId,

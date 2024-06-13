@@ -7,7 +7,7 @@ export class ResumeController {
         this.resumeService = resumeService
     }
     //이력서 조회
-    getResumes = async(req, res, next) => {
+    getAllResume = async(req, res, next) => {
         const user = req.user;
         const authorId = user.id;
         let { sort } = req.query;
@@ -27,7 +27,7 @@ export class ResumeController {
     };
     
     // 이력서 상세 조회
-    getResumeDetailById = async (req, res, next) => {
+    findResumeById = async (req, res, next) => {
         try {
             const user = req.user;
             const authorId = user.id;
