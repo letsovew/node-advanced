@@ -10,7 +10,10 @@ const mockResumeService = {
 };
 
 const mockRequest = {
-    body: jest.fn();
+    user: jest.fn(),
+    body: jest.fn(),
+    query: jest.fn(),
+    params: jest.fn(),
 };
 
 const mockResponse = {

@@ -1,4 +1,5 @@
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
+import { HttpError }from '../errors/http.error.js';
 import { MESSAGES } from '../constants/message.constant.js';
 import { AuthService } from '../services/auth.service.js';
 
