@@ -4,7 +4,7 @@ import { ResumeService } from '../services/resumes.service.js';
 
 export class ResumeController {
     constructor(resumeService){
-        this.resumeService = resumeService
+        this.resumeService = resumeService;
     }
     //이력서 조회
     getAllResume = async(req, res, next) => {
